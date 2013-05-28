@@ -1,9 +1,10 @@
 #!/bin/sh
 
+dmenu_args=( "$@" )
 was_playing=0
 
 d_artist() {
-    mpc list artist | sort -f | dmenu -p artist
+    mpc list artist | sort -f | dmenu -p artist "${dmenu_args[@]}"
 }
 
 d_album() {
@@ -11,7 +12,7 @@ d_album() {
     {
         echo "[ALL]"
         mpc list album artist "$artist" | sort -f
-    } | dmenu -p album
+    } | dmenu -p album "${dmenu_args[@]}"
 }
 
 is_playing() {
