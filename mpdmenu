@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 dmenu_args=( "$@" )
 was_playing=0
@@ -16,26 +16,26 @@ d_album() {
 }
 
 is_playing() {
-    [ "$(mpc current)" ]
+    [[ "$(mpc current)" ]]
 }
 
 artist="$(d_artist)"
-[ "$artist" ] || exit 1
+[[ "$artist" ]] || exit 1
 
 album="$(d_album "$artist")"
-[ "$album" ] || exit 2
+[[ "$album" ]] || exit 2
 
 if is_playing; then
     was_playing=1
 fi
 
 mpc clear
-if [ "$album" == "[ALL]" ]; then
+if [[ "$album" == "[ALL]" ]]; then
     mpc find artist "$artist" | mpc add
 else
     mpc find artist "$artist" album "$album" | mpc add
 fi
 
-if [ "$was_playing" -eq 1 ]; then
+if (( was_playing )); then
     mpc play >/dev/null 2>&1
 fi
