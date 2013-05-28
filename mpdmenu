@@ -1,6 +1,5 @@
 #!/bin/bash
 
-dmenu_args=( "$@" )
 was_playing=0
 
 d_artist() {
@@ -15,27 +14,60 @@ d_album() {
     } | dmenu -p album "${dmenu_args[@]}"
 }
 
+d_playlist() {
+    mpc playlist -f '%position% - %title% - %album% - %artist%' | dmenu -p track "${dmenu_args[@]}"
+}
+
 is_playing() {
     [[ "$(mpc current)" ]]
 }
 
-artist="$(d_artist)"
-[[ "$artist" ]] || exit 1
+mode=library
+pivoted=0
+our_args=()
+dmenu_args=()
 
-album="$(d_album "$artist")"
-[[ "$album" ]] || exit 2
+for arg do
+    if [[ "$arg" == "::" ]]; then
+        pivoted=1
+        continue
+    fi
 
-if is_playing; then
-    was_playing=1
-fi
+    if (( pivoted )); then
+        dmenu_args+=( "$arg" )
+    else
+        case "$arg" in
+            -l) mode=library ;;
+            -p) mode=playlist ;;
+        esac
+    fi
+done
 
-mpc clear
-if [[ "$album" == "[ALL]" ]]; then
-    mpc find artist "$artist" | mpc add
-else
-    mpc find artist "$artist" album "$album" | mpc add
-fi
+case "$mode" in
+    library)
+        artist="$(d_artist)"
+        [[ "$artist" ]] || exit 1
 
-if (( was_playing )); then
-    mpc play >/dev/null 2>&1
-fi
+        album="$(d_album "$artist")"
+        [[ "$album" ]] || exit 2
+
+        if is_playing; then
+            was_playing=1
+        fi
+
+        mpc clear
+        if [[ "$album" == "[ALL]" ]]; then
+            mpc find artist "$artist" | mpc add
+        else
+            mpc find artist "$artist" album "$album" | mpc add
+        fi
+
+        if (( was_playing )); then
+            mpc play >/dev/null 2>&1
+        fi
+    ;;
+    playlist)
+        mpc play "$(d_playlist)"
+    ;;
+esac
+
