@@ -15,7 +15,8 @@ d_album() {
 }
 
 d_playlist() {
-    mpc playlist -f '%position% - %title% - %album% - %artist%' | dmenu -p track "${dmenu_args[@]}"
+    track="$(mpc playlist -f '%position% - %title% - %album% - %artist%' | dmenu -p track "${dmenu_args[@]}")"
+    printf '%s' "${track%% *}"
 }
 
 is_playing() {
