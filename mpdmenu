@@ -8,10 +8,16 @@ d_artist() {
 
 d_album() {
     local artist="$1"
-    {
-        echo "[ALL]"
-        mpc list album artist "$artist" | sort -f
-    } | dmenu -p album "${dmenu_args[@]}"
+    mapfile -t albums < <(mpc list album artist "$artist")
+    if (( "${#albums[@]}" > 1 )) ; then
+        {
+            echo "[ALL]"
+            printf '%s\n' "${albums[@]}" | sort -f
+        } | dmenu -p album "${dmenu_args[@]}"
+    else
+        # We only have one album, so just use that.
+        printf '%s\n' "${albums[0]}"
+    fi
 }
 
 d_playlist() {
