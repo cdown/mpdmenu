@@ -1,6 +1,7 @@
 #!/bin/bash
 
 was_playing=0
+all_name="[ALL]"
 
 d_artist() {
     mpc list artist | sort -f | dmenu -p artist "${dmenu_args[@]}"
@@ -13,7 +14,7 @@ d_album() {
     mapfile -t albums < <(mpc list album artist "$artist")
     if (( "${#albums[@]}" > 1 )) ; then
         {
-            echo "[ALL]"
+            printf '%s\n' "$all_name"
             printf '%s\n' "${albums[@]}" | sort -f
         } | dmenu -p album "${dmenu_args[@]}"
     else
@@ -68,7 +69,7 @@ case "$mode" in
         fi
 
         mpc clear
-        if [[ "$album" == "[ALL]" ]]; then
+        if [[ "$album" == "$all_name" ]]; then
             mpc find artist "$artist" | mpc add
         else
             mpc find artist "$artist" album "$album" | mpc add
