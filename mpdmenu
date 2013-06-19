@@ -8,6 +8,8 @@ d_artist() {
 
 d_album() {
     local artist="$1"
+    local albums
+
     mapfile -t albums < <(mpc list album artist "$artist")
     if (( "${#albums[@]}" > 1 )) ; then
         {
@@ -21,7 +23,10 @@ d_album() {
 }
 
 d_playlist() {
-    track="$(mpc playlist -f '%position% - %title% - %album% - %artist%' | dmenu -p track "${dmenu_args[@]}")"
+    local format="%position% - %title% - %album% - %artist%"
+    local track
+
+    track="$(mpc playlist -f "$format" | dmenu -p track "${dmenu_args[@]}")"
     printf '%s' "${track%% *}"
 }
 
