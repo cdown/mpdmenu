@@ -1,7 +1,12 @@
 #!/bin/bash
 
-was_playing=0
 all_name="[ALL]"
+mode=library
+pivoted=0
+was_playing=0
+
+dmenu_args=()
+our_args=()
 
 d_artist() {
     mpc list artist | sort -f | dmenu -p artist "${dmenu_args[@]}"
@@ -34,11 +39,6 @@ d_playlist() {
 is_playing() {
     [[ "$(mpc current)" ]]
 }
-
-mode=library
-pivoted=0
-our_args=()
-dmenu_args=()
 
 for arg do
     if [[ "$arg" == "::" ]]; then
