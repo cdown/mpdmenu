@@ -3,7 +3,6 @@
 all_name="[ALL]"
 mode=library
 pivoted=0
-was_playing=0
 
 dmenu_args=()
 our_args=()
@@ -36,10 +35,6 @@ d_playlist() {
     printf '%s' "${track%% *}"
 }
 
-is_playing() {
-    [[ "$(mpc current)" ]]
-}
-
 for arg do
     if [[ "$arg" == "::" ]]; then
         pivoted=1
@@ -64,10 +59,6 @@ case "$mode" in
         album="$(d_album "$artist")"
         [[ "$album" ]] || exit 2
 
-        if is_playing; then
-            was_playing=1
-        fi
-
         mpc clear
         if [[ "$album" == "$all_name" ]]; then
             mpc find artist "$artist" | mpc add
@@ -75,9 +66,7 @@ case "$mode" in
             mpc find artist "$artist" album "$album" | mpc add
         fi
 
-        if (( was_playing )); then
-            mpc play >/dev/null 2>&1
-        fi
+        mpc play >/dev/null 2>&1
     ;;
     playlist)
         mpc play "$(d_playlist)"
