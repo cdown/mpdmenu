@@ -2,7 +2,6 @@
 
 all_name="[ALL]"
 mode=library
-pivoted=0
 
 dmenu_args=()
 our_args=()
@@ -35,20 +34,20 @@ d_playlist() {
     printf '%s' "${track%% *}"
 }
 
+i=2
+
 for arg do
     if [[ "$arg" == "::" ]]; then
-        pivoted=1
-        continue
+        dmenu_args=( "${@:$i}" )
+        break
     fi
 
-    if (( pivoted )); then
-        dmenu_args+=( "$arg" )
-    else
-        case "$arg" in
-            -l) mode=library ;;
-            -p) mode=playlist ;;
-        esac
-    fi
+    case "$arg" in
+        -l) mode=library ;;
+        -p) mode=playlist ;;
+    esac
+
+    let i++
 done
 
 case "$mode" in
