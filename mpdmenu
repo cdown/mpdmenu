@@ -1,10 +1,7 @@
 #!/bin/bash
 
-all_name="[ALL]"
+all_name=[ALL]
 mode=library
-
-dmenu_args=()
-our_args=()
 
 d_artist() {
     mpc list artist | sort -f | dmenu -p artist "${dmenu_args[@]}"
@@ -15,7 +12,7 @@ d_album() {
     local albums
 
     mapfile -t albums < <(mpc list album artist "$artist")
-    if (( "${#albums[@]}" > 1 )) ; then
+    if (( ${#albums[@]} > 1 )) ; then
         {
             printf '%s\n' "$all_name"
             printf '%s\n' "${albums[@]}" | sort -f
@@ -30,14 +27,14 @@ d_playlist() {
     local format="%position% - %title% - %album% - %artist%"
     local track
 
-    track="$(mpc playlist -f "$format" | dmenu -p track "${dmenu_args[@]}")"
+    track=$(mpc playlist -f "$format" | dmenu -p track "${dmenu_args[@]}")
     printf '%s' "${track%% *}"
 }
 
 i=2
 
 for arg do
-    if [[ "$arg" == "::" ]]; then
+    if [[ $arg == :: ]]; then
         dmenu_args=( "${@:$i}" )
         break
     fi
@@ -52,14 +49,14 @@ done
 
 case "$mode" in
     library)
-        artist="$(d_artist)"
-        [[ "$artist" ]] || exit 1
+        artist=$(d_artist)
+        [[ $artist ]] || exit 1
 
-        album="$(d_album "$artist")"
-        [[ "$album" ]] || exit 2
+        album=$(d_album "$artist")
+        [[ $album ]] || exit 2
 
         mpc clear
-        if [[ "$album" == "$all_name" ]]; then
+        if [[ $album == "$all_name" ]]; then
             mpc find artist "$artist" | mpc add
         else
             mpc find artist "$artist" album "$album" | mpc add
@@ -71,4 +68,3 @@ case "$mode" in
         mpc play "$(d_playlist)"
     ;;
 esac
-
