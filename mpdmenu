@@ -1,6 +1,6 @@
 #!/bin/bash
 
-all_name=[ALL]
+all_name='[ALL]'
 mode=library
 
 d_artist() {
