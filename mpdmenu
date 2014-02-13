@@ -57,9 +57,9 @@ case "$mode" in
 
         mpc clear
         if [[ $album == "$all_name" ]]; then
-            mpc find artist "$artist" | mpc add
+            mpc findadd artist "$artist"
         else
-            mpc find artist "$artist" album "$album" | mpc add
+            mpc findadd artist "$artist" album "$album"
         fi
 
         mpc play >/dev/null 2>&1
