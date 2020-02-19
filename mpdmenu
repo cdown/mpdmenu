@@ -68,9 +68,9 @@ case "$mode" in
             mpc find artist "$artist" album "$album" | sort | mpc add
         fi
 
-        mpc play >/dev/null 2>&1
+        mpc play >/dev/null
     ;;
     playlist)
-        mpc play "$(d_playlist)"
+        mpc play "$(d_playlist)" >/dev/null
     ;;
 esac
