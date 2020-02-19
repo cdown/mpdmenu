@@ -24,8 +24,14 @@ d_album() {
 }
 
 d_playlist() {
-    local format="%position% - %title% - %album% - %artist%"
+    local format="%position% %title%"
+    local extra_format="(%artist% - %album%)"
     local track
+    local num_extras
+
+    # If all tracks are from the same artist and album, no need to display that
+    num_extras=$(mpc playlist -f "$extra_format" | sort | uniq | wc -l)
+    (( num_extras == 1 )) || format+=" $extra_format"
 
     track=$(mpc playlist -f "$format" | dmenu -p track "${dmenu_args[@]}")
     printf '%s' "${track%% *}"
