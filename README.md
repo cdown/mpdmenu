@@ -1,6 +1,16 @@
+# mpdmenu
+
+## Description
 Simple dmenu frontend for MPD.
 
-# Arguments
+## Dependencies
+Package | Description
+:--- | :---
+mpd | music player daemon
+mpc | CLI client for mpd
+dmenu | simple app/script menu
+
+## Arguments
 
 Pass mpdmenu arguments first, followed by any dmenu arguments. They are separated by `::`. For example:
 
