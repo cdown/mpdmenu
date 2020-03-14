@@ -4,7 +4,7 @@ all_name='[ALL]'
 mode=library
 
 d_artist() {
-    mpc list artist | sort -f | dmenu -p artist "${dmenu_args[@]}"
+    mpc list artist | sort -f | dmenu -i -p artist "${dmenu_args[@]}"
 }
 
 d_album() {
