@@ -8,7 +8,7 @@ Package | Description
 :--- | :---
 mpd | music player daemon
 mpc | CLI client for mpd
-dmenu | simple app/script menu
+[dmenu fork](https://github.com/samedamci/dmenu) | simple app/script menu
 
 ## Arguments
 

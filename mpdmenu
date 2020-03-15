@@ -4,7 +4,7 @@ all_name='[ALL]'
 mode=library
 
 d_artist() {
-    mpc list artist | sort -f | dmenu -i -p artist "${dmenu_args[@]}"
+    mpc list artist | sort -f | dmenu -i -p artist "${dmenu_args[@]}" -h 24
 }
 
 d_album() {
@@ -16,7 +16,7 @@ d_album() {
         {
             printf '%s\n' "$all_name"
             printf '%s\n' "${albums[@]}" | sort -f
-        } | dmenu -i -p album "${dmenu_args[@]}"
+        } | dmenu -i -p album "${dmenu_args[@]}" -h 24
     else
         # We only have one album, so just use that.
         printf '%s\n' "${albums[0]}"
@@ -33,7 +33,7 @@ d_playlist() {
     num_extras=$(mpc playlist -f "$extra_format" | sort | uniq | wc -l)
     (( num_extras == 1 )) || format+=" $extra_format"
 
-    track=$(mpc playlist -f "$format" | dmenu -i -p track "${dmenu_args[@]}")
+    track=$(mpc playlist -f "$format" | dmenu -i -p track "${dmenu_args[@]}" -h 24)
     printf '%s' "${track%% *}"
 }
 
