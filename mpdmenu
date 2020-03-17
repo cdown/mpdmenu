@@ -82,8 +82,8 @@ case "$mode" in
         mpc play "$(d_playlist)" >/dev/null
     ;;
 	Song)
-		mpc search title "$(d_song)" | mpc insert
-		mpc play
-		
+		mpc clear
+		mpc search title "$(d_song)" | mpc add
+		mpc play >/dev/null
 	;;
 esac
