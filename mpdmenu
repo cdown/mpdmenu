@@ -1,10 +1,10 @@
 #!/bin/bash
 
 all_name='[ALL]'
-mode=library
+mode=Library
 
 d_artist() {
-    mpc list artist | sort -f | dmenu -i -p artist "${dmenu_args[@]}" -h 24
+    mpc list artist | sort -f | dmenu -i -p Artist "${dmenu_args[@]}" -h 24
 }
 
 d_album() {
@@ -16,11 +16,15 @@ d_album() {
         {
             printf '%s\n' "$all_name"
             printf '%s\n' "${albums[@]}" | sort -f
-        } | dmenu -i -p album "${dmenu_args[@]}" -h 24
+        } | dmenu -i -p Album "${dmenu_args[@]}" -h 24
     else
         # We only have one album, so just use that.
         printf '%s\n' "${albums[0]}"
     fi
+}
+
+d_song() {
+	mpc list title | sort -f | dmenu -i -p Song "${dmenu_args[@]}" -h 24 
 }
 
 d_playlist() {
@@ -33,7 +37,7 @@ d_playlist() {
     num_extras=$(mpc playlist -f "$extra_format" | sort | uniq | wc -l)
     (( num_extras == 1 )) || format+=" $extra_format"
 
-    track=$(mpc playlist -f "$format" | dmenu -i -p track "${dmenu_args[@]}" -h 24)
+    track=$(mpc playlist -f "$format" | dmenu -i -p Playlist "${dmenu_args[@]}" -h 24)
     printf '%s' "${track%% *}"
 }
 
@@ -46,15 +50,19 @@ for arg do
     fi
 
     case "$arg" in
-        -l) mode=library ;;
-        -p) mode=playlist ;;
+        -l) mode=Library ;;
+        -p) mode=Playlist ;;
+		-s) mode=Song ;;
+		-a) 
+			MODE=$(printf "Library\nSong\nPlaylist" | dmenu -i -p "Choose mode" -h 24)
+			mode=$MODE ;;
     esac
 
     let i++
 done
 
 case "$mode" in
-    library)
+    Library)
         artist=$(d_artist)
         [[ $artist ]] || exit 1
 
@@ -70,7 +78,12 @@ case "$mode" in
 
         mpc play >/dev/null
     ;;
-    playlist)
+	Playlist)
         mpc play "$(d_playlist)" >/dev/null
     ;;
+	Song)
+		mpc search title "$(d_song)" | mpc insert
+		mpc play
+		
+	;;
 esac
